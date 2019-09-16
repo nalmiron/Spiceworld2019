@@ -1,2 +1,2 @@
-# Spiceworld2019
+# Spiceworld 2019
 Demo code and presentations for Spiceworld 2019

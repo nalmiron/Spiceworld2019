@@ -52,4 +52,4 @@ function Remediate-BitLockerCompliance {
     }
 }
 
-Remediate-BitLockerCompliance
+Get-Help Remediate-BitLockerCompliance -Detailed

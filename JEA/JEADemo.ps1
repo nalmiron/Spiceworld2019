@@ -144,6 +144,8 @@ function Generate-JEAFiles {
     New-Item -ItemType File -Path "$JEAModulePath\JEAModule.psm1" | Out-Null
     New-ModuleManifest -Path "$JEAModulePath\JEAModule.psd1" -RootModule "JEAModule.psm1"
 
+    Copy-Item -Path $JEAModulePath -Destination "C:\Program Files\WindowsPowerShell\Modules\"
+
 
     #endregion Role Capability Files
 
@@ -194,14 +196,11 @@ function Setup-JEADemo {
     Init-Directory -path $RoleCapabilityPath
     Init-Directory -path $sessionConfigurationPath
 
-    # Add JEA folder to PSModulePath, this allows visibility of the JEA Module a RoleConfigurationFiles
-    $env:PSModulePath = $env:PSModulePath + ";C:\JEA"
-
     # Create AD Objects
     Create-DemoADObjects -RootDomainPath $rootDomainPath
 
     # Generate JEA Demo files
-    Generate-JEAFiles -RoleCapabilityPath $roleCapabilityPath -SessionConfigurationPath $sessionConfigurationPath -TranscriptsPath $transcriptPath
+    Generate-JEAFiles -JEAModulePath $jeaModulePath -RoleCapabilityPath $roleCapabilityPath -SessionConfigurationPath $sessionConfigurationPath -TranscriptsPath $transcriptPath
 
 }
 

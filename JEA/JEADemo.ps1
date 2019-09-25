@@ -127,6 +127,7 @@ function Generate-JEAFiles {
             Author = "Nick"
             CompanyName = "Automox"
             Description = "This role enables DNS admins to clear DNS Server cache, Restart the DNS Service, and restart the computer"
+            ModulesToImport = "ActiveDirectory"
             VisibleCmdlets = "Get-*",
                 @{ Name ="Set-ADAccountPassword"; Parameters = @{ Name = "Identity"; ValidatePattern = "u-*" }, 
                                                                @{ Name = "NewPassword"; ValidateSet = "Get-Password" },

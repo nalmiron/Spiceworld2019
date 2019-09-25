@@ -83,7 +83,7 @@ function Init-Directory {
     )
 
     if (-not(Test-Path $path)) {
-        New-Item $Path -ItemType Directory
+        New-Item $Path -ItemType Directory | Out-Null
     }
 }
 

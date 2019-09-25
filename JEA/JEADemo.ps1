@@ -26,18 +26,11 @@
         New-ADGroup -Name "JEA Enabled" -SamAccountName JEAEnabled -GroupCategory Security -GroupScope Global -DisplayName "Help Enabled" -Path "OU=JEADemo,$RootDomainPath" -Description "Members of this group are enabled for JEA usage"
 
         # Create Users
-        New-ADUser -Name u-htech -AccountPassword $(ConvertTo-SecureString -AsPlainText "superSecretP@ss" -Force) -Path "OU=JEADemo,$RootDomainPath"
-        New-ADUser -Name u-dadmin -AccountPassword $(ConvertTo-SecureString -AsPlainText "superSecretP@ss" -Force) -Path "OU=JEADemo,$RootDomainPath"
-        New-ADUser -Name u-dadmin2 -AccountPassword $(ConvertTo-SecureString -AsPlainText "superSecretP@ss" -Force) -Path "OU=JEADemo,$RootDomainPath"
-        New-ADUser -Name a-fadmin -AccountPassword $(ConvertTo-SecureString -AsPlainText "superSecretP@ss" -Force) -Path "OU=JEADemo,$RootDomainPath"
-        New-ADUser -Name s-JEAContextAccount -AccountPassword $(ConvertTo-SecureString -AsPlainText "superSecretP@ss" -Force) -Path "OU=JEADemo,$RootDomainPath"
-
-        # Enable Users
-        Enable-ADAccount -Identity u-htech
-        Enable-ADAccount -Identity u-dadmin
-        Enable-ADAccount -Identity u-dadmin2
-        Enable-ADAccount -Identity a-fadmin
-        Enable-ADAccount -Identity s-JEAContextAccount
+        New-ADUser -Name u-htech -AccountPassword $(ConvertTo-SecureString -AsPlainText "superSecretP@ss" -Force) -Path "OU=JEADemo,$RootDomainPath" -Enabled $true
+        New-ADUser -Name u-dadmin -AccountPassword $(ConvertTo-SecureString -AsPlainText "superSecretP@ss" -Force) -Path "OU=JEADemo,$RootDomainPath" -Enabled $true
+        New-ADUser -Name u-dadmin2 -AccountPassword $(ConvertTo-SecureString -AsPlainText "superSecretP@ss" -Force) -Path "OU=JEADemo,$RootDomainPath" -Enabled $true
+        New-ADUser -Name a-fadmin -AccountPassword $(ConvertTo-SecureString -AsPlainText "superSecretP@ss" -Force) -Path "OU=JEADemo,$RootDomainPath" -Enabled $true
+        New-ADServiceAccount -Name JEA -Path "OU=JEADemo,$RootDomainPath" -Enabled $true
 
         #region Define Group Membership
         # Add members to DNSAdmins group
@@ -153,7 +146,7 @@ function Generate-JEAFiles {
     }
     New-PSSessionConfigurationFile -SessionType RestrictedRemoteServer `
                                     -Path "$SessionConfigurationPath\JEADemo.pssc" `
-                                    -GroupManagedServiceAccount "LAB\s-JEAContextAccount" `
+                                    -RunAsVirtualAccount `
                                     -TranscriptDirectory "$TranscriptsPath" `
                                     -RoleDefinitions $roles `
                                     -RequiredGroups @{ Or = 'JEAEnabled', 'Domain Admins' }

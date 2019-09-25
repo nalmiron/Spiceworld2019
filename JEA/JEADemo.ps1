@@ -33,21 +33,19 @@
 
         #region Define Group Membership
         # Add members to DNSAdmins group
-        Add-ADGroupMember -Identity DNSAdmins -Members u-dadmin
-        Add-ADGroupMember -Identity DNSAdmins -Members u-dadmin2
-        Add-ADGroupMember -Identity DNSAdmins -Members a-fadmin
+        Add-ADGroupMember -Identity DNSAdmins -Members u-dadmin, u-dadmin2, a-fadmin
 
         # Add members to HelpDeskTech group
         Add-ADGroupMember -Identity HelpDeskTechs -Members u-htech
-        Add-ADGroupMember -Identity HelpDeskTechs -Members a-fadmin
 
         # Add members to JEAEnabled group
-        Add-ADGroupMember -Identity JEAEnabled -Members u-dadmin
-        Add-ADGroupMember -Identity JEAEnabled -Members u-htech
-        Add-ADGroupMember -Identity JEAEnabled -Members a-fadmin
+        Add-ADGroupMember -Identity JEAEnabled -Members u-dadmin, u-htech
         
         # Add member to Domain Admins Group
         Add-ADGroupMember -Identity "Domain Admins" -Members a-fadmin
+
+        # Add to remote Desktop Users group
+        Add-ADGroupMember -Identity "Remote Desktop Users" -Members JEAEnabled
         #endregion Define Group Membership
 
         Write-Host "JEADemo OU, Accounts, and Security Groups created"
@@ -129,7 +127,6 @@ function Generate-JEAFiles {
             Author = "Nick"
             CompanyName = "Automox"
             Description = "This role enables DNS admins to clear DNS Server cache, Restart the DNS Service, and restart the computer"
-            ModulesToImport = "Microsoft.PowerShell.Core", "ActiveDirectory"
             VisibleCmdlets = "Get-*",
                 @{ Name ="Set-ADAccountPassword"; Parameters = @{ Name = "Identity"; ValidatePattern = "u-*" }, 
                                                                @{ Name = "NewPassword"; ValidateSet = "Get-Password" },
@@ -141,10 +138,10 @@ function Generate-JEAFiles {
 
     # Create an empty script module and module manifest.
     # At least one file in the module folder must have the same name as the folder itself.
-    New-Item -ItemType File -Path "$JEAModulePath\JEAModule.psm1" | Out-Null
+    New-Item -ItemType File -Path "$JEAModulePath\JEAModule.psm1" -Force | Out-Null
     New-ModuleManifest -Path "$JEAModulePath\JEAModule.psd1" -RootModule "JEAModule.psm1"
 
-    Copy-Item -Path $JEAModulePath -Destination "C:\Program Files\WindowsPowerShell\Modules\"
+    Copy-Item -Path $JEAModulePath -Destination "C:\Program Files\WindowsPowerShell\Modules\" -Recurse -Force
 
 
     #endregion Role Capability Files

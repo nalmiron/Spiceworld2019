@@ -48,7 +48,6 @@
         
         # Add member to Domain Admins Group
         Add-ADGroupMember -Identity "Domain Admins" -Members a-fadmin
-        Add-ADGroupMember -Identity "Domain Admins" -Members s-JEAContextAccount
         #endregion Define Group Membership
 
         Write-Host "JEADemo OU, Accounts, and Security Groups created"

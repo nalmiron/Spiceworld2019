@@ -85,6 +85,8 @@ function Generate-JEAFiles {
     .DESCRIPTION
         Generates Role Capability and Session Configuration files for this JEA Demo
     .PARAMETER RoleCapabilityPath
+        Path where the JEA Module will be generated
+    .PARAMETER RoleCapabilityPath
         Path where the generated role capability files should be stored
     .PARAMETER SessionConfigurationPath
         Path where the generated session configurations files should be stored
@@ -94,6 +96,8 @@ function Generate-JEAFiles {
         Generate-JEAFiles -RoleCapabilityPath "C:\JEA\RoleCapabilities" -SessionConfigurationPath "C:\JEA\SessionConfigurations"
     #>
     param (
+        [Parameter(Mandatory=$true)]
+            [string] $JEAModulePath,
         [Parameter(Mandatory=$true)]
             [string] $RoleCapabilityPath,
         [Parameter(Mandatory=$true)]
@@ -134,6 +138,13 @@ function Generate-JEAFiles {
             AliasDefinitions = @{ Name = 'Get-Password'; Value = 'Read-Host -Prompt "Provide New Password" -AsSecureString'}
         }
     New-PSRoleCapabilityFile @helpDeskRoleParameters
+
+    # Create an empty script module and module manifest.
+    # At least one file in the module folder must have the same name as the folder itself.
+    New-Item -ItemType File -Path "$JEAModulePath\JEAModule.psm1" | Out-Null
+    New-ModuleManifest -Path "$JEAModulePath\JEAModule.psd1" -RootModule "JEAModule.psm1"
+
+
     #endregion Role Capability Files
 
     #region Session Configuration Files
@@ -172,18 +183,19 @@ function Setup-JEADemo {
           [string] $RootFilePath
     )
 
-    $roleCapabilityPath = "$RootFilePath\JEA\RoleCapabilities"
+    $jeaModulePath = "$RootFilePath\JEA\JEAModule"
+    $roleCapabilityPath = "$jeaModulePath\RoleCapabilities"
     $sessionConfigurationPath = "$RootFilePath\JEA\SessionConfigurations"
     $transcriptPath = "$RootFilePath\JEA\Transcripts"
 
     # Initialize Directories
     Init-Directory -path "$RootFilePath\JEA"
+    Init-Directory -path "$RootFilePath\JEA\JEAModule"
     Init-Directory -path $RoleCapabilityPath
     Init-Directory -path $sessionConfigurationPath
 
-    # Add JEA folder to PSModulePath, this allows visibility of the RoleConfigurationFiles
-    $env:PSModulePath = $env:PSModulePath + ";c:\JEA"
-
+    # Add JEA folder to PSModulePath, this allows visibility of the JEA Module a RoleConfigurationFiles
+    $env:PSModulePath = $env:PSModulePath + ";C:\JEA"
 
     # Create AD Objects
     Create-DemoADObjects -RootDomainPath $rootDomainPath

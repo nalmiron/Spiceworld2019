@@ -32,6 +32,13 @@
         New-ADUser -Name a-fadmin -AccountPassword $(ConvertTo-SecureString -AsPlainText "superSecretP@ss" -Force) -Path "OU=JEADemo,$RootDomainPath"
         New-ADUser -Name s-JEAContextAccount -AccountPassword $(ConvertTo-SecureString -AsPlainText "superSecretP@ss" -Force) -Path "OU=JEADemo,$RootDomainPath"
 
+        # Enable Users
+        Enable-ADAccount -Identity u-htech
+        Enable-ADAccount -Identity u-dadmin
+        Enable-ADAccount -Identity u-dadmin2
+        Enable-ADAccount -Identity a-fadmin
+        Enable-ADAccount -Identity s-JEAContextAccount
+
         #region Define Group Membership
         # Add members to DNSAdmins group
         Add-ADGroupMember -Identity DNSAdmins -Members u-dadmin
@@ -146,7 +153,7 @@ function Generate-JEAFiles {
     }
     New-PSSessionConfigurationFile -SessionType RestrictedRemoteServer `
                                     -Path "$SessionConfigurationPath\JEADemo.pssc" `
-                                    -GroupManagedServiceAccount s-JEAContextAccount `
+                                    -GroupManagedServiceAccount "LAB\s-JEAContextAccount" `
                                     -TranscriptDirectory "$TranscriptsPath" `
                                     -RoleDefinitions $roles `
                                     -RequiredGroups @{ Or = 'JEAEnabled', 'Domain Admins' }

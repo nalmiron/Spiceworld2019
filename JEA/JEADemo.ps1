@@ -30,7 +30,6 @@
         New-ADUser -Name u-dadmin -AccountPassword $(ConvertTo-SecureString -AsPlainText "superSecretP@ss" -Force) -Path "OU=JEADemo,$RootDomainPath" -Enabled $true
         New-ADUser -Name u-dadmin2 -AccountPassword $(ConvertTo-SecureString -AsPlainText "superSecretP@ss" -Force) -Path "OU=JEADemo,$RootDomainPath" -Enabled $true
         New-ADUser -Name a-fadmin -AccountPassword $(ConvertTo-SecureString -AsPlainText "superSecretP@ss" -Force) -Path "OU=JEADemo,$RootDomainPath" -Enabled $true
-        New-ADServiceAccount -Name JEA -Path "OU=JEADemo,$RootDomainPath" -Enabled $true
 
         #region Define Group Membership
         # Add members to DNSAdmins group
